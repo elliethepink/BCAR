@@ -1046,6 +1046,19 @@ const TriggerAdditions = [
         }
     }
 
+    modApi.hookFunction('CharacterGetEffects', 4, (args, next) => {
+        const effects = next(args);
+        if (args[0].BCAR?.isFlying) {
+            return effects.filter(e => !["Freeze", "Slow"].includes(e));
+        }
+        return effects;
+    });
+
+    modApi.hookFunction("ChatRoomSync", 4, (args, next) => {
+        if (Player.BCAR.isFlying) WingFlap();
+        return next(args);
+    });
+
     function TryFly() {
         if (!InventoryGet(Player,"Wings")) {
             ChatRoomSendLocal(
@@ -1090,16 +1103,19 @@ const TriggerAdditions = [
             const emoticon = InventoryGet(Player, 'Emoticon');
             if (emoticon.Property === undefined) emoticon.Property = {};
             emoticon.Property.OverrideHeight = { Height: +70 };
+            Player.BCAR.isFlying = true;
         }
     }
 
     function Landing() {
       if (Player?.BCAR?.bcarSettings?.wingFlappingEnable) {
+        CharacterSetActivePose(Player, "LegsOpen");
         const emoticon = InventoryGet(Player, 'Emoticon');
         if (emoticon?.Property) {
           delete emoticon.Property.OverrideHeight;
           CurrentScreen === 'ChatRoom' ? ChatRoomCharacterUpdate(Player) : CharacterRefresh(Player);
         }
+        Player.BCAR.isFlying = false;
       }
     }
 
