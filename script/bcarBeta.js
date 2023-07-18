@@ -1059,6 +1059,15 @@ const TriggerAdditions = [
         return next(args);
     });
 
+    function GetItemPreventingFly() {
+        // Many items don't tether/chain/etc but ought to prevent flying
+        const otherPreventingItemNames = ["CeilingShackles", "FloorShackles", "SuspensionCuffs", "CeilingRope", "CeilingChain", "BallChain"];
+        return Player.Appearance.find(i => (
+            ["Tethered", "Chained", "Mounted", "Enclose", "IsLeashed", "IsChained"].some(e => InventoryItemHasEffect(i, e))
+            || otherPreventingItemNames.includes(i.Asset.Name)
+        ));
+    }
+
     function TryFly() {
         if (!InventoryGet(Player,"Wings")) {
             ChatRoomSendLocal(
@@ -1077,18 +1086,13 @@ const TriggerAdditions = [
             return false;
         }
 
-        // Many items don't tether/chain/etc but ought to prevent flying
-        const otherPreventingItemNames = ["CeilingShackles", "FloorShackles", "SuspensionCuffs", "CeilingRope", "CeilingChain", "BallChain"];
-        const preventingItem = Player.Appearance.find(i => (
-            ["Tethered", "Chained", "Mounted", "Enclose", "IsLeashed", "IsChained"].some(e => InventoryItemHasEffect(i, e))
-            || otherPreventingItemNames.includes(i.Asset.Name)
-        ));
+        const preventingItem = GetItemPreventingFly();
         if (preventingItem) {
           ChatRoomSendLocal(
               "<p style='background-color:#000452;color:#EEEEEE;'><b>Bondage Club Auto React +</b>\n" +
               "You can't fly because the " + preventingItem.Asset.Description + " holds you down.</p>", wt.info
           )
-          ServerSend("ChatRoomChat", { Content: "Beep", Type: "Action", Dictionary: [{Tag: "Beep", Text: CharacterNickname(Player) + " tried to fly while " + Player.BCAR.bcarSettings.genderDefault.capPronoun.toLocaleLowerCase() + " is held down by a " + preventingItem.Asset.Description + "." }]});
+          ServerSend("ChatRoomChat", { Content: "Beep", Type: "Action", Dictionary: [{Tag: "Beep", Text: CharacterNickname(Player) + " tried to fly while held down by a " + preventingItem.Asset.Description + "." }]});
             return false;
         } else {
             Fly();
@@ -1116,6 +1120,7 @@ const TriggerAdditions = [
           CurrentScreen === 'ChatRoom' ? ChatRoomCharacterUpdate(Player) : CharacterRefresh(Player);
         }
         Player.BCAR.isFlying = false;
+        ChatRoomCharacterUpdate(Player)
       }
     }
 
@@ -1150,20 +1155,20 @@ const TriggerAdditions = [
     }, 5000);
 */
 
-    const restraints = ["CollarChainLong", "CollarRopeLong", "CollarChainMedium", "CollarRopeMedium", "CollarChainShort", "CollarRopeShort", "Post", "PetPost"]
     window.ChatRoomRegisterMessageHandler({ Priority: -200, Description: "BCAR+ Ground flying players with chains", Callback: (data, sender, msg, metadata) => {
+        if (!Player.BCAR.isFlying) return;
         if ("ActionUse" != msg) return // this is not our message
         let asset_name, dest
         for (let item of data.Dictionary) {
             if ('NextAsset' === item.Tag) asset_name = item.AssetName
             if ('DestinationCharacter' === item.Tag) dest = item.MemberNumber
         }
-        if (!restraints.includes(asset_name)) return // this is not our asset
         if (dest !== Player.MemberNumber) return // we are not the receiver
-        if (!InventoryGet(Player, 'Emoticon')?.Property?.OverrideHeight) return // we are not flying
-        delete InventoryGet(Player, 'Emoticon')?.Property?.OverrideHeight
-        ChatRoomCharacterUpdate(Player)
-        ServerSend("ChatRoomChat", { Content: "Beep", Type: "Action", Dictionary: [{Tag: "Beep", Text: `${CharacterNickname(Player)} was dragged to the ground by a ${Asset.find(a => a.Name === asset_name).Description}.` }]})
+        const preventingItem = GetItemPreventingFly();
+        if (asset_name === preventingItem.Asset.Name) {
+            Landing();
+            ServerSend("ChatRoomChat", { Content: "Beep", Type: "Action", Dictionary: [{Tag: "Beep", Text: `${CharacterNickname(Player)} was dragged to the ground by a ${Asset.find(a => a.Name === asset_name).Description}.` }]})
+        }
     }})
 
 
@@ -3923,7 +3928,7 @@ CommandCombine([
     const wingHelpTextLines = {
         lines: [
             `First equip the main wings you want`,
-            `o wear primarily in the "Wings" slot`,
+            `to wear primarily in the "Wings" slot`,
             `in your wardrobe. Use Update Wing 1`,
             `to save the main wings.`,
             `For your wings to flap follow the same`,
@@ -4013,7 +4018,7 @@ CommandCombine([
             }
             else{
                 PreferenceMessage = "Main Wing updated";
-                CommandTailChange(['wing1']);
+                CommandWingChange(['wing1']);
             }
 
         // Update Wing 2          [BUTTON]
@@ -4023,7 +4028,7 @@ CommandCombine([
             }
             else{
                 PreferenceMessage = "Secondary Wing updated";
-                CommandTailChange(['wing2']);
+                CommandWingChange(['wing2']);
             }
 
 
