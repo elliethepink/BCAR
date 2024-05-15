@@ -2184,7 +2184,7 @@ if (window.BCAR_VERSION) {
 
     modApi.hookFunction("CharacterGetEffects", 4, (args, next) => {
         const effects = next(args);
-        if (args[0].BCAR?.isFlying) {
+        if (IsFlying(args[0])) {
             return effects.filter((e) => !["Freeze", "Slow"].includes(e));
         }
         return effects;
@@ -2192,7 +2192,7 @@ if (window.BCAR_VERSION) {
 
     const origGetSlowLevel = Player.GetSlowLevel;
     Player.GetSlowLevel = function() {
-        if (Player.BCAR?.isFlying) {
+        if (IsFlying(Player)) {
             return 0;
         } else {
             return origGetSlowLevel.apply(this);
@@ -2230,7 +2230,7 @@ if (window.BCAR_VERSION) {
     }
 
     modApi.hookFunction("ChatRoomMapViewCanEnterTile", 4, (args, next) => {
-        if (Player.BCAR.isFlying) {
+        if (IsFlying(Player)) {
             return ChatRoomMapViewCanEnterTileFlying(...args);
         } else {
             return next(args);
@@ -2238,13 +2238,13 @@ if (window.BCAR_VERSION) {
     });
 
     modApi.hookFunction("ChatRoomSync", 4, (args, next) => {
-        if (Player.BCAR.isFlying) WingFlap();
+        if (IsFlying(Player)) WingFlap();
         return next(args);
     });
 
     modApi.hookFunction("ChatRoomMenuBuild", 4, (args, next) => {
         next(args);
-        if (Player.BCAR.isFlying){
+        if (IsFlying(Player)){
             ChatRoomMenuButtons.push("Land");
         } else {
             ChatRoomMenuButtons.push("Fly");
@@ -2420,6 +2420,10 @@ if (window.BCAR_VERSION) {
         return Player.Appearance.find((i) => i.Craft?.Description?.includes("(binds wings)"));
     }
 
+    function IsFlying(character) {
+        return InventoryGet(character, "Emoticon")?.Property?.OverrideHeight?.Height > 50;
+    }
+
     function TryFly() {
         const wingBindItem = GetWingBindingItem();
         if (wingBindItem) {
@@ -2511,7 +2515,6 @@ if (window.BCAR_VERSION) {
                 ? ChatRoomCharacterUpdate(Player)
                 : CharacterRefresh(Player);
 
-            Player.BCAR.isFlying = true;
         }
     }
 
@@ -2525,7 +2528,6 @@ if (window.BCAR_VERSION) {
                     ? ChatRoomCharacterUpdate(Player)
                     : CharacterRefresh(Player);
             }
-            Player.BCAR.isFlying = false;
             ChatRoomCharacterUpdate(Player);
         }
     }
@@ -2572,7 +2574,7 @@ if (window.BCAR_VERSION) {
 */
 
     function checkRestrictions() {
-        if (Player.BCAR.isFlying) {
+        if (IsFlying(Player)) {
             const preventingItem = GetItemPreventingFly();
             if (preventingItem) {
                 Landing();
@@ -2595,7 +2597,7 @@ if (window.BCAR_VERSION) {
 
         const wingBindItem = GetWingBindingItem();
         if (wingBindItem) {
-            if (Player.BCAR.isFlying) {
+            if (IsFlying(Player)) {
                 Landing();
                 ServerSend("ChatRoomChat", {
                     Content: "Beep",
