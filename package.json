@@ -3,16 +3,16 @@
   "version": "0.7.1",
   "description": "Bondage Club Auto React +",
   "scripts": {
-    "build": "esbuild script/bcar.js --outfile=out/bcar.js --minify --sourcemap"
+    "build": "esbuild script/bcarBeta.js --outfile=out/bcar.js --minify --sourcemap --bundle"
   },
   "keywords": [],
   "author": "DrBranestawm",
   "license": "GPL-3.0",
   "dependencies": {
-    "bondage-club-mod-sdk": "^1.1.0"
+    "bondage-club-mod-sdk": "^1.2.0"
   },
   "devDependencies": {
-    "esbuild": "^0.18.14",
-    "prettier": "^3.0.0"
+    "esbuild": "^0.18.20",
+    "prettier": "^3.2.5"
   }
 }
