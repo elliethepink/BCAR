@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name BCAR Beta Loader
+// @name BCAR Beta Loader (Ellie's Version)
 // @namespace https://www.bondageprojects.com/
 // @version 0.6.3
 // @description BCAR Bondacge Club Auto React
@@ -17,6 +17,6 @@
     'use strict';
     var script = document.createElement("script");
     script.setAttribute("crossorigin", "anonymous");
-    script.src = "https://drbranestawm.github.io/BCAR/script/bcarBeta.js";
+    script.src = "https://elliethepink.github.io/BCAR/bcar.js";
     document.head.appendChild(script);
 })();
