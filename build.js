@@ -1,5 +1,5 @@
 const esbuild = require("esbuild");
-const fs = require("fs");
+const fsPromise = require("fs/promises");
 
 const BANNER = `// ==UserScript==
 // @name BCAR Beta Loader (Ellie's Version)
@@ -18,15 +18,17 @@ const BANNER = `// ==UserScript==
 
 `;
 
-esbuild.build({
-  entryPoints: ['script/bcarBeta.js'],
-  bundle: true,
-  sourcemap: true,
-  minify: true,
-  banner: {
-    js: BANNER,
-  },
-  outfile: 'out/bcar.user.js',
-})
+(async () => {
+    await esbuild.build({
+      entryPoints: ['script/bcarBeta.js'],
+      bundle: true,
+      sourcemap: true,
+      minify: true,
+      banner: {
+        js: BANNER,
+      },
+      outfile: 'out/bcar.user.js',
+    })
 
-fs.copyFileSync("script/bcarBetaLoader.user.js", "out/bcarLoader.user.js");
+    await fsPromise.copyFile("script/bcarBetaLoader.user.js", "out/bcarLoader.user.js");
+})();
