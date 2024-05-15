@@ -1,4 +1,7 @@
-// ==UserScript==
+const esbuild = require("esbuild");
+const fs = require("fs");
+
+const BANNER = `// ==UserScript==
 // @name BCAR Beta Loader (Ellie's Version)
 // @namespace https://www.bondageprojects.com/
 // @version 0.6.3
@@ -13,10 +16,17 @@
 // @grant none
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    var script = document.createElement("script");
-    script.setAttribute("crossorigin", "anonymous");
-    script.src = "https://elliethepink.github.io/BCAR/bcar.user.js";
-    document.head.appendChild(script);
-})();
+`;
+
+esbuild.build({
+  entryPoints: ['script/bcarBeta.js'],
+  bundle: true,
+  sourcemap: true,
+  minify: true,
+  banner: {
+    js: BANNER,
+  },
+  outfile: 'out/bcar.user.js',
+})
+
+fs.copyFileSync("script/bcarBetaLoader.user.js", "out/bcarLoader.user.js");

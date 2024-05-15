@@ -3,7 +3,7 @@
   "version": "0.7.1",
   "description": "Bondage Club Auto React +",
   "scripts": {
-    "build": "esbuild script/bcarBeta.js --outfile=out/bcar.js --minify --sourcemap --bundle"
+    "build": "node build.js"
   },
   "keywords": [],
   "author": "DrBranestawm",

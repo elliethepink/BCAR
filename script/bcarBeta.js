@@ -2470,6 +2470,7 @@ if (window.BCAR_VERSION) {
             return false;
         }
 
+        WingFlap();
         const preventingItem = GetItemPreventingFly();
         if (preventingItem) {
             ChatRoomSendLocal(
@@ -2496,7 +2497,6 @@ if (window.BCAR_VERSION) {
             return false;
         } else {
             Fly();
-            WingFlap();
             return true;
         }
     }
