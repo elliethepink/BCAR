@@ -37,7 +37,7 @@ if (window.BCAR_VERSION) {
 
     const getWingVerb = () =>
         ["FairyWings", "BeeWings", "PixieWings"].includes(
-            InventoryGet(Player, "Wings")?.Asset?.Name,
+            Player.BCAR.bcarSettings.wingsDefault.wings1,
         )
             ? "flutters"
             : "flaps";
