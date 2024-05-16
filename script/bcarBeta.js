@@ -7044,6 +7044,112 @@ if (window.BCAR_VERSION) {
     ActivityFemale3DCG.push(tailBrushActivity);
     ActivityFemale3DCGOrdering.push(tailBrushActivity.Name);
 
+    // -- Antannae Wiggle
+    var antennaeWiggleActivity = {
+        Name: "BCAR_AntennaeWiggle",
+        Target: [],
+        TargetSelf: ["ItemHead"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasAntennae"],
+    };
+
+    CustomPrerequisiteFuncs.set(
+        "HasAntennae",
+        (acting, acted, group) => InventoryGet(acted, "HairAccessory1")?.Asset?.Name === "Antennae",
+    );
+
+    CustomImages.set(antennaeWiggleActivity.Name, "Assets/Female3DCG/Activity/Wiggle.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_AntennaeWiggle", "Wiggle Antennae"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHead-BCAR_AntennaeWiggle",
+        "Wiggle Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHead-BCAR_AntennaeWiggle",
+        "SourceCharacter wiggles PronounPossessive antennae.",
+    ]);
+
+    ActivityFemale3DCG.push(antennaeWiggleActivity);
+    ActivityFemale3DCGOrdering.push(antennaeWiggleActivity.Name);
+
+    // -- Tickle Wing
+    var wingTickleActivity = {
+        Name: "BCAR_WingTickle",
+        Target: ["ItemHood"],
+        TargetSelf: ["ItemHood"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasWings"],
+    };
+
+    CustomPrerequisiteFuncs.set(
+        "HasWings",
+        (acting, acted, group) => !!InventoryGet(acted, "Wings"),
+    );
+
+    CustomImages.set(wingTickleActivity.Name, "Assets/Female3DCG/Activity/Tickle.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_WingTickle", "Tickle Wings"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHood-BCAR_WingTickle",
+        "Tickle Wings",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHood-BCAR_WingTickle",
+        "Tickle Wings",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHood-BCAR_WingTickle",
+        "SourceCharacter tickles PronounPossessive wings.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHood-BCAR_WingTickle",
+        "SourceCharacter tickles TargetCharacter's wings.",
+    ]);
+
+    ActivityFemale3DCG.push(wingTickleActivity);
+    ActivityFemale3DCGOrdering.push(wingTickleActivity.Name);
+
+    // -- Caress Wing
+    var wingCaressActivity = {
+        Name: "BCAR_WingCaress",
+        Target: ["ItemHood"],
+        TargetSelf: ["ItemHood"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasWings"],
+    };
+
+    CustomPrerequisiteFuncs.set(
+        "HasWings",
+        (acting, acted, group) => !!InventoryGet(acted, "Wings"),
+    );
+
+    CustomImages.set(wingCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_WingCaress", "Caress Wings"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHood-BCAR_WingCaress",
+        "Caress Wings",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHood-BCAR_WingCaress",
+        "Caress Wings",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHood-BCAR_WingCaress",
+        "SourceCharacter carresses PronounPossessive wings.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHood-BCAR_WingCaress",
+        "SourceCharacter carresses TargetCharacter's wings.",
+    ]);
+
+    ActivityFemale3DCG.push(wingCaressActivity);
+    ActivityFemale3DCGOrdering.push(wingCaressActivity.Name);
+
     // END CUSTOM ACTIVITIES
 
     //FBC Expressions
