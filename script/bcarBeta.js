@@ -7074,6 +7074,138 @@ if (window.BCAR_VERSION) {
     ActivityFemale3DCG.push(antennaeWiggleActivity);
     ActivityFemale3DCGOrdering.push(antennaeWiggleActivity.Name);
 
+    // -- Antannae Caress
+    var antennaeCaressActivity = {
+        Name: "BCAR_AntennaeCaress",
+        Target: ["ItemHead"],
+        TargetSelf: ["ItemHead"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasAntennae"],
+    };
+
+    CustomImages.set(antennaeWiggleActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_AntennaeWiggle", "Caress Antennae"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHead-BCAR_AntennaeCaress",
+        "Caress Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHead-BCAR_AntennaeCaress",
+        "Caress Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHead-BCAR_AntennaeCaress",
+        "SourceCharacter caresses PronounPossessive antennae.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHead-BCAR_AntennaeCaress",
+        "SourceCharacter caresses TargetCharacter's antennae.",
+    ]);
+
+    ActivityFemale3DCG.push(antennaeCaressActivity);
+    ActivityFemale3DCGOrdering.push(antennaeCaressActivity.Name);
+
+    // -- Antannae Lick
+    var antennaeLickActivity = {
+        Name: "BCAR_AntennaeLick",
+        Target: ["ItemHead"],
+        TargetSelf: ["ItemHead"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasAntennae"],
+    };
+
+    CustomImages.set(antennaeLickActivity.Name, "Assets/Female3DCG/Activity/Lick.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_AntennaeLick", "Lick Antennae"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHead-BCAR_AntennaeLick",
+        "Lick Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHead-BCAR_AntennaeLick",
+        "Lick Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHead-BCAR_AntennaeLick",
+        "SourceCharacter licks PronounPossessive antennae.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHead-BCAR_AntennaeLick",
+        "SourceCharacter licks TargetCharacter's antennae.",
+    ]);
+
+    ActivityFemale3DCG.push(antennaeLickActivity);
+    ActivityFemale3DCGOrdering.push(antennaeLickActivity.Name);
+
+    // -- Antannae Suck
+    var antennaeSuckActivity = {
+        Name: "BCAR_AntennaeSuck",
+        Target: ["ItemHead"],
+        TargetSelf: ["ItemHead"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasAntennae"],
+    };
+
+    CustomImages.set(antennaeSuckActivity.Name, "Assets/Female3DCG/Activity/Suck.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_AntennaeSuck", "Suck Antennae"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHead-BCAR_AntennaeSuck",
+        "Suck Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHead-BCAR_AntennaeSuck",
+        "Suck Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHead-BCAR_AntennaeSuck",
+        "SourceCharacter sucks PronounPossessive antennae.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHead-BCAR_AntennaeSuck",
+        "SourceCharacter sucks TargetCharacter's antennae.",
+    ]);
+
+    ActivityFemale3DCG.push(antennaeSuckActivity);
+    ActivityFemale3DCGOrdering.push(antennaeSuckActivity.Name);
+
+    // -- Antannae Boing
+    var antennaeBoingActivity = {
+        Name: "BCAR_AntennaeBoing",
+        Target: ["ItemHead"],
+        TargetSelf: ["ItemHead"],
+        MaxProgress: 50,
+        MaxProgressSelf: 50,
+        Prerequisite: ["HasAntennae"],
+    };
+
+    CustomImages.set(antennaeBoingActivity.Name, "Assets/Female3DCG/Activity/Wiggle.png");
+
+    ActivityDictionary?.push(["ActivityBCAR_AntennaeBoing", "Boing Antennae"]);
+    ActivityDictionary?.push([
+        "Label-ChatSelf-ItemHead-BCAR_AntennaeBoing",
+        "Boing Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "Label-ChatOther-ItemHead-BCAR_AntennaeBoing",
+        "Boing Antennae",
+    ]);
+    ActivityDictionary?.push([
+        "ChatSelf-ItemHead-BCAR_AntennaeBoing",
+        "SourceCharacter pulls PronounPossessive antennae down and lets them spring back with a boing.",
+    ]);
+    ActivityDictionary?.push([
+        "ChatOther-ItemHead-BCAR_AntennaeBoing",
+        "SourceCharacter pulls TargetCharacter's antennae down and lets them spring back with a boing.",
+    ]);
+
+    ActivityFemale3DCG.push(antennaeBoingActivity);
+    ActivityFemale3DCGOrdering.push(antennaeBoingActivity.Name);
+
     // -- Tickle Wing
     var wingTickleActivity = {
         Name: "BCAR_WingTickle",
@@ -7121,11 +7253,6 @@ if (window.BCAR_VERSION) {
         MaxProgressSelf: 50,
         Prerequisite: ["HasWings"],
     };
-
-    CustomPrerequisiteFuncs.set(
-        "HasWings",
-        (acting, acted, group) => !!InventoryGet(acted, "Wings"),
-    );
 
     CustomImages.set(wingCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
 
