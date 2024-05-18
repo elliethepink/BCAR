@@ -7084,7 +7084,7 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasAntennae"],
     };
 
-    CustomImages.set(antennaeWiggleActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
+    CustomImages.set(antennaeCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
 
     ActivityDictionary?.push(["ActivityBCAR_AntennaeWiggle", "Caress Antennae"]);
     ActivityDictionary?.push([
