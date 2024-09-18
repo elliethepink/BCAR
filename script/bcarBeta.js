@@ -2238,7 +2238,7 @@ if (window.BCAR_VERSION) {
     });
 
     modApi.hookFunction("ChatRoomSync", 4, (args, next) => {
-        if (IsFlying(Player)) WingFlap();
+        //if (IsFlying(Player)) WingFlap();
         return next(args);
     });
 
@@ -7111,7 +7111,7 @@ if (window.BCAR_VERSION) {
     var antennaeLickActivity = {
         Name: "BCAR_AntennaeLick",
         Target: ["ItemHead"],
-        TargetSelf: ["ItemHead"],
+        TargetSelf: [],
         MaxProgress: 50,
         MaxProgressSelf: 50,
         Prerequisite: ["HasAntennae"],
@@ -7121,16 +7121,8 @@ if (window.BCAR_VERSION) {
 
     ActivityDictionary?.push(["ActivityBCAR_AntennaeLick", "Lick Antennae"]);
     ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHead-BCAR_AntennaeLick",
-        "Lick Antennae",
-    ]);
-    ActivityDictionary?.push([
         "Label-ChatOther-ItemHead-BCAR_AntennaeLick",
         "Lick Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHead-BCAR_AntennaeLick",
-        "SourceCharacter licks PronounPossessive antennae.",
     ]);
     ActivityDictionary?.push([
         "ChatOther-ItemHead-BCAR_AntennaeLick",
@@ -7144,7 +7136,7 @@ if (window.BCAR_VERSION) {
     var antennaeSuckActivity = {
         Name: "BCAR_AntennaeSuck",
         Target: ["ItemHead"],
-        TargetSelf: ["ItemHead"],
+        TargetSelf: [],
         MaxProgress: 50,
         MaxProgressSelf: 50,
         Prerequisite: ["HasAntennae"],
@@ -7154,16 +7146,8 @@ if (window.BCAR_VERSION) {
 
     ActivityDictionary?.push(["ActivityBCAR_AntennaeSuck", "Suck Antennae"]);
     ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHead-BCAR_AntennaeSuck",
-        "Suck Antennae",
-    ]);
-    ActivityDictionary?.push([
         "Label-ChatOther-ItemHead-BCAR_AntennaeSuck",
         "Suck Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHead-BCAR_AntennaeSuck",
-        "SourceCharacter sucks PronounPossessive antennae.",
     ]);
     ActivityDictionary?.push([
         "ChatOther-ItemHead-BCAR_AntennaeSuck",
