@@ -2307,7 +2307,7 @@ if (window.BCAR_VERSION) {
                                         Tag: "Beep",
                                         Text:
                                             CharacterNickname(Player) +
-                                            " 's wings struggle against the " +
+                                            "'s wings struggle against the " +
                                             wingBindItem.Asset.Description +
                                             ".",
                                     },
@@ -2417,7 +2417,7 @@ if (window.BCAR_VERSION) {
     }
 
     function GetWingBindingItem() {
-        return Player.Appearance.find((i) => i.Craft?.Description?.includes("(binds wings)"));
+        return Player.Appearance.find((i) => i.Craft?.Description?.includes("binds wings"));
     }
 
     function IsFlying(character) {
@@ -2785,7 +2785,7 @@ if (window.BCAR_VERSION) {
                     pattern.test(wingsHideMessage),
                 );
                 if (result) {
-                    Landing();
+                    if (IsFlying(Player)) Landing();
                     WingsHide();
                 }
             }
@@ -6960,6 +6960,14 @@ if (window.BCAR_VERSION) {
     });
 
     // -- Support for repointing or adding custom image thumbnails to activities
+    modApi.hookFunction("ElementButton.CreateForActivity", 1, (args, next) => {
+        const activity = args[1];
+        if (CustomImages.has(activity.Activity.Name)) {
+            args[4].image = CustomImages.get(activity.Activity.Name);
+        }
+        next(args);
+    });
+
     modApi.hookFunction("DrawImageResize", 1, (args, next) => {
         var path = args[0];
         if (!!path && typeof path.indexOf === 'function' && path.indexOf("BCAR_") > -1) {
