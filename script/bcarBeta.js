@@ -7,6 +7,8 @@ const ICONS = Object.freeze({
     TAIL: "data:image/png;base64,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",
 });
 
+const emojiIconCache = {};
+
 function is_newer(current, candidate) {
     const current_levels = current.split("."),
         candidate_levels = candidate.split(".");
@@ -62,6 +64,7 @@ if (window.BCAR_VERSION) {
         "delete2",
         "delete3",
         "dog",
+        "down",
         "ear1",
         "ear2",
         "eardelete",
@@ -107,6 +110,8 @@ if (window.BCAR_VERSION) {
         "tailwagcount",
         "timerhelp",
         "timer",
+        "tiny",
+        "up",
         "upperleft",
         "versions",
         "wing1",
@@ -2209,29 +2214,21 @@ if (window.BCAR_VERSION) {
         return status;
     };*/
 
-    function ChatRoomMapViewCanEnterTileFlying(X, Y) {
-        // Out of map bound or walls cannot enter, super powers skip everything
-        if ((X < 0) || (Y < 0) || (X >= ChatRoomMapViewWidth) || (Y >= ChatRoomMapViewHeight)) return 0;
-        if (ChatRoomMapViewHasSuperPowers()) return ChatRoomMapViewBaseMovementSpeed / 10;
-        if (ChatRoomMapViewIsWall(X, Y) && !ChatRoomMapViewCanEnterWall(X, Y)) return 0;
+    function ChatRoomMapViewCanEnterTileFlying(next, X, Y) {
+		const Tile = ChatRoomMapViewGetTileAtPos(X, Y);
+        // includes Lava
+        if (Tile?.Type === "Water") {
+            return ChatRoomMapViewBaseMovementSpeed * 0.7;
+        }
 
-        // Enclosed or suspended players cannot change tiles
-        if (Player.IsEnclose() || Player.IsSuspended() || Player.IsMounted()) return 0;
+		const nextResult = next([X, Y]);
 
-        // The MapImmobile effect prevents players from moving
-        if (Player.HasEffect("MapImmobile")) return 0;
-
-        // Cannot enter a tile occupied by another player
-        for (let C of ChatRoomCharacter)
-            if (!C.IsPlayer() && (C.MapData?.Pos != null) && (C.MapData.Pos.X === X) && (C.MapData.Pos.Y === Y))
-                return 0;
-
-        return ChatRoomMapViewBaseMovementSpeed * 0.7;
+        return nextResult === 0 ? 0 : ChatRoomMapViewBaseMovementSpeed * 0.7;
     }
 
     modApi.hookFunction("ChatRoomMapViewCanEnterTile", 4, (args, next) => {
         if (IsFlying(Player)) {
-            return ChatRoomMapViewCanEnterTileFlying(...args);
+            return ChatRoomMapViewCanEnterTileFlying(next, ...args);
         } else {
             return next(args);
         }
@@ -2249,98 +2246,126 @@ if (window.BCAR_VERSION) {
         } else {
             ChatRoomMenuButtons.push("Fly");
         }
-        ChatRoomMenuButtons.push("Flap");
+        if (InventoryGet(Player, "Wings")) {
+            ChatRoomMenuButtons.push("Fold");
+        } else {
+            ChatRoomMenuButtons.push("Spread");
+        }
+        //ChatRoomMenuButtons.push("Flap");
     });
 
-    modApi.hookFunction("ChatRoomMenuClick", 4, (args, next) => {
-        const Space = 992 / (ChatRoomMenuButtons.length);
-        for (let B = 0; B < ChatRoomMenuButtons.length; B++) {
-            if (MouseXIn(1005 + Space * B, Space - 2)) {
-                switch (ChatRoomMenuButtons[B]) {
-                    case "Fly":
-                        if (TryFly()) {
-                            ServerSend("ChatRoomChat", {
-                                Content: "Beep",
-                                Type: "Action",
-                                Target: null,
-                                Dictionary: [
-                                    { Tag: "Beep", Text: "msg" },
-                                    { Tag: "Biep", Text: "msg" },
-                                    { Tag: "Sonner", Text: "msg" },
-                                    {
-                                        Tag: "msg",
-                                        Text:
-                                            CharacterNickname(Player) +
-                                            " starts flying.",
-                                    },
-                                ],
-                            });
-                        }
-                        break;
-                    case "Land":
-                        ServerSend("ChatRoomChat", {
-                            Content: "Beep",
-                            Type: "Action",
-                            Target: null,
-                            Dictionary: [
-                                { Tag: "Beep", Text: "msg" },
-                                { Tag: "Biep", Text: "msg" },
-                                { Tag: "Sonner", Text: "msg" },
-                                {
-                                    Tag: "msg",
-                                    Text:
-                                        CharacterNickname(Player) +
-                                        " lands back on the ground.",
-                                },
-                            ],
-                        });
-                        Landing();
-                        break;
-                    case "Flap":
-                        const wingBindItem = GetWingBindingItem();
-                        if (wingBindItem) {
-                            ServerSend("ChatRoomChat", {
-                                Content: "Beep",
-                                Type: "Action",
-                                Dictionary: [
-                                    {
-                                        Tag: "Beep",
-                                        Text:
-                                            CharacterNickname(Player) +
-                                            "'s wings struggle against the " +
-                                            wingBindItem.Asset.Description +
-                                            ".",
-                                    },
-                                ],
-                            });
-                        } else {
-                            ServerSend("ChatRoomChat", {
-                                Content: "Beep",
-                                Type: "Action",
-                                Target: null,
-                                Dictionary: [
-                                    { Tag: "Beep", Text: "msg" },
-                                    { Tag: "Biep", Text: "msg" },
-                                    { Tag: "Sonner", Text: "msg" },
-                                    {
-                                        Tag: "msg",
-                                        Text:
-                                            CharacterNickname(Player) +
-                                            " " +
-                                            getWingVerb() +
-                                            " " +
-                                            Player.BCAR.bcarSettings.genderDefault.capPossessive.toLocaleLowerCase() +
-                                            " wings.",
-                                    },
-                                ],
-                            });
-                            WingFlap();
-                        }
-                        break;
+    modApi.hookFunction("ChatRoomMenuPerformAction", 4, (args, next) => {
+        switch (args[0]) {
+            case "Fly":
+                if (TryFly()) {
+                    ServerSend("ChatRoomChat", {
+                        Content: "Beep",
+                        Type: "Action",
+                        Target: null,
+                        Dictionary: [
+                            { Tag: "Beep", Text: "msg" },
+                            { Tag: "Biep", Text: "msg" },
+                            { Tag: "Sonner", Text: "msg" },
+                            {
+                                Tag: "msg",
+                                Text:
+                                    CharacterNickname(Player) +
+                                    " starts flying.",
+                            },
+                        ],
+                    });
+                }
+                break;
+            case "Land":
+                ServerSend("ChatRoomChat", {
+                    Content: "Beep",
+                    Type: "Action",
+                    Target: null,
+                    Dictionary: [
+                        { Tag: "Beep", Text: "msg" },
+                        { Tag: "Biep", Text: "msg" },
+                        { Tag: "Sonner", Text: "msg" },
+                        {
+                            Tag: "msg",
+                            Text:
+                                CharacterNickname(Player) +
+                                " lands back on the ground.",
+                        },
+                    ],
+                });
+                Landing();
+                break;
+            case "Fold":
+                WingsHide();
+                break;
+            case "Spread":
+                const wingBindItem = GetWingBindingItem();
+                if (wingBindItem) {
+                    ServerSend("ChatRoomChat", {
+                        Content: "Beep",
+                        Type: "Action",
+                        Dictionary: [
+                            {
+                                Tag: "Beep",
+                                Text:
+                                    CharacterNickname(Player) +
+                                    "'s wings struggle against the " +
+                                    wingBindItem.Asset.Description +
+                                    ".",
+                            },
+                        ],
+                    });
+                } else {
+					WingsSpread();
+                }
+                break;
+            default:
+                next(args);
+        }
+
+            /*
+            case "Flap": {
+                const wingBindItem = GetWingBindingItem();
+                if (wingBindItem) {
+                    ServerSend("ChatRoomChat", {
+                        Content: "Beep",
+                        Type: "Action",
+                        Dictionary: [
+                            {
+                                Tag: "Beep",
+                                Text:
+                                    CharacterNickname(Player) +
+                                    "'s wings struggle against the " +
+                                    wingBindItem.Asset.Description +
+                                    ".",
+                            },
+                        ],
+                    });
+                } else {
+                    ServerSend("ChatRoomChat", {
+                        Content: "Beep",
+                        Type: "Action",
+                        Target: null,
+                        Dictionary: [
+                            { Tag: "Beep", Text: "msg" },
+                            { Tag: "Biep", Text: "msg" },
+                            { Tag: "Sonner", Text: "msg" },
+                            {
+                                Tag: "msg",
+                                Text:
+                                    CharacterNickname(Player) +
+                                    " " +
+                                    getWingVerb() +
+                                    " " +
+                                    Player.BCAR.bcarSettings.genderDefault.capPossessive.toLocaleLowerCase() +
+                                    " wings.",
+                            },
+                        ],
+                    });
+                    WingFlap();
                 }
             }
-        }
-        next(args);
+            */
     });
 
     modApi.hookFunction("TextGet", 4, (args, next) => {
@@ -2350,10 +2375,51 @@ if (window.BCAR_VERSION) {
             return "Land";
         } else if (args[0] === "MenuFlap") {
             return "Wings";
+		} else if (args[0] === "MenuSpread") {
+			return "Spread";
+		} else if (args[0] === "MenuFold") {
+			return "Fold";
         }
         return next(args);
     });
 
+    function emojiToBase64(emoji, size = 64) {
+        if (!emojiIconCache[emoji]) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+       
+            const ctx = canvas.getContext('2d');
+            ctx.font = `${size * 0.8}px serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, size / 2, size / 2);
+       
+            emojiIconCache[emoji] = canvas.toDataURL('image/png');
+        }
+        return emojiIconCache[emoji];
+    }
+
+    modApi.hookFunction("ChatRoomMenuButtonVisualState", 4, (args, next) => {
+        switch (args[0]) {
+            case "Fly":
+                return { image: emojiToBase64("🛫"), state: GetItemPreventingFly() ? "Blocked" : "Default", hoverText: "Fly" };
+                break;
+            case "Land":
+                return { image: emojiToBase64("🛬"), state: "Default", hoverText: "Land" };
+                break;
+            case "Spread":
+                return { image: emojiToBase64("📖"), state: GetWingBindingItem() ? "Blocked" : "Default", hoverText: "Spread Wings" };
+                break;
+            case "Fold":
+                return { image: emojiToBase64("📘"), state: IsFlying() ? "Blocked" : "Default", hoverText: "Fold Wings" };
+                break;
+            default:
+                return next(args);
+        } 
+    });
+
+/*
     function drawButtonEmoji(emoji, x, y) {
         MainCanvas.font = CommonGetFont(45);
         DrawText(emoji, x + 30, y + 30);
@@ -2367,6 +2433,12 @@ if (window.BCAR_VERSION) {
                 break;
             case "Icons/Small/Land.png":
                 drawButtonEmoji("🛬", args[1], args[2]);
+                break;
+            case "Icons/Small/Spread.png":
+                drawButtonEmoji("📖", args[1], args[2]);
+                break;
+            case "Icons/Small/Fold.png":
+                drawButtonEmoji("📘", args[1], args[2]);
                 break;
             case "Icons/Small/Flap.png":
                 drawButtonEmoji("🪽", args[1], args[2]);
@@ -2384,6 +2456,12 @@ if (window.BCAR_VERSION) {
             case "Icons/Rectangle/Land.png":
                 drawButtonEmoji("🛬", args[2], args[3]);
                 break;
+            case "Icons/Rectangle/Spread.png":
+                drawButtonEmoji("📖", args[2], args[3]);
+                break;
+            case "Icons/Rectangle/Fold.png":
+                drawButtonEmoji("📘", args[2], args[3]);
+                break;
             case "Icons/Rectangle/Flap.png":
                 drawButtonEmoji("🪽", args[2], args[3]);
                 break;
@@ -2391,6 +2469,7 @@ if (window.BCAR_VERSION) {
                 next(args);
         }
     });
+*/
 
     function GetItemPreventingFly() {
         // Many items don't tether/chain/etc but ought to prevent flying
@@ -2421,7 +2500,8 @@ if (window.BCAR_VERSION) {
     }
 
     function IsFlying(character) {
-        return InventoryGet(character, "Emoticon")?.Property?.OverrideHeight?.Height > 50;
+        if (!character) return false;
+        return typeof InventoryGet(character, "Emoticon")?.Property?.OverrideHeight?.Height == "number";
     }
 
     function TryFly() {
@@ -2445,7 +2525,7 @@ if (window.BCAR_VERSION) {
         }
 
         if (!InventoryGet(Player, "Wings")) {
-            ChatRoomSendLocal(
+            /*ChatRoomSendLocal(
                 "<p style='background-color:#000452;color:#EEEEEE;'><b>Bondage Club Auto React +</b>\n" +
                     "You need wings to fly!</p>",
                 wt.info,
@@ -2462,7 +2542,8 @@ if (window.BCAR_VERSION) {
                     },
                 ],
             });
-            return false;
+            return false;*/
+			WingsSpread();
         }
 
         if (Player.BCAR.bcarSettings.wingFlappingEnable !== true) {
@@ -2505,12 +2586,20 @@ if (window.BCAR_VERSION) {
         }
     }
 
+    function defaultFlyOverrideHeight() {
+        if (InventoryGet(Player, "额外身高_Luzi")?.Asset?.Name === "缩小地上") {
+            return { HeightRatioProportion: 0.8, Height: 0 };
+        } else {
+            return { Height: 70 };
+        }
+    }
+
     function Fly() {
         if (Player.BCAR.bcarSettings.wingFlappingEnable === true) {
             CharacterSetActivePose(Player, "LegsClosed");
             const emoticon = InventoryGet(Player, "Emoticon");
             if (emoticon.Property === undefined) emoticon.Property = {};
-            emoticon.Property.OverrideHeight = { Height: +70 };
+            emoticon.Property.OverrideHeight = defaultFlyOverrideHeight();
             CurrentScreen === "ChatRoom"
                 ? ChatRoomCharacterUpdate(Player)
                 : CharacterRefresh(Player);
@@ -3772,6 +3861,37 @@ if (window.BCAR_VERSION) {
                 );
         }
     }
+
+    function CommandUpDown(dir) {
+		if (!["up", "down"].includes(dir)) return;
+        if (!IsFlying(Player)) return;
+
+		const orHeight = InventoryGet(Player, "Emoticon").Property.OverrideHeight;
+
+        if (InventoryGet(Player, "额外身高_Luzi")?.Asset?.Name === "缩小地上") {
+			orHeight.HeightRatioProportion += (dir === "up") ? -0.1 : 0.1;
+		} else {
+			orHeight.Height += (dir === "up") ? 10 : -10;
+		}
+
+		CurrentScreen === "ChatRoom"
+			? ChatRoomCharacterUpdate(Player)
+			: CharacterRefresh(Player);
+    }
+
+	function CommandTiny(args) {
+        if (InventoryGet(Player, "额外身高_Luzi")?.Asset?.Name === "缩小地上") {
+			InventoryRemove(Player, "额外身高_Luzi");
+            CurrentScreen === "ChatRoom"
+                ? ChatRoomCharacterUpdate(Player)
+                : CharacterRefresh(Player);
+		} else {
+			InventoryWear(Player, "缩小地上_Luzi", "额外身高_Luzi");
+            CurrentScreen === "ChatRoom"
+                ? ChatRoomCharacterUpdate(Player)
+                : CharacterRefresh(Player);
+		}
+	}
     //End of Wing Commands
 
     //Profile Commands
@@ -4765,6 +4885,8 @@ if (window.BCAR_VERSION) {
                 CommandWingDelete(args.split(" "));
                 CommandFly(args.split(" "));
                 CommandWingHelp(args.split(" "));
+                CommandUpDown(args.split(" ")[0]);
+                if (args.split(" ")[0] === "tiny") CommandTiny();
                 //Profile Commands
                 CommandProfile(args.split(" "));
                 //Misc Commands
@@ -4878,7 +5000,7 @@ if (window.BCAR_VERSION) {
 
     // ****************************   PREFERENCES   *********************************
 
-    PreferenceSubscreenList.splice(16, 0, "BCARSettings");
+    //PreferenceSubscreenList.splice(16, 0, "BCARSettings");
     modApi.hookFunction("TextGet", 2, (args, next) => {
         if (args[0] == "HomepageBCARSettings") return "BCAR+ Settings";
         return next(args);
@@ -7268,6 +7390,15 @@ if (window.BCAR_VERSION) {
 
     ActivityFemale3DCG.push(wingCaressActivity);
     ActivityFemale3DCGOrdering.push(wingCaressActivity.Name);
+
+    modApi.hookFunction("PreferenceGetActivityFactor", 0, (args, next) => {
+		const [C, Type, Self] = args;
+		const activity = AssetGetActivity(C.AssetFamily, Type);
+		if (activity?.Name.startsWith("BCAR_")) {
+			return 2;
+		}
+		return next(args);
+	}, 4);
 
     // END CUSTOM ACTIVITIES
 
