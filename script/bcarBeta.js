@@ -2383,17 +2383,17 @@ if (window.BCAR_VERSION) {
         return next(args);
     });
 
-    function emojiToBase64(emoji, size = 64) {
+    function emojiToBase64(emoji) {
         if (!emojiIconCache[emoji]) {
             const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
+            canvas.width = 160;
+            canvas.height = 100;
        
             const ctx = canvas.getContext('2d');
-            ctx.font = `${size * 0.8}px serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(emoji, size / 2, size / 2);
+            ctx.font = "80px serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(emoji, 80, 50);
        
             emojiIconCache[emoji] = canvas.toDataURL('image/png');
         }
@@ -2403,7 +2403,7 @@ if (window.BCAR_VERSION) {
     modApi.hookFunction("ChatRoomMenuButtonVisualState", 4, (args, next) => {
         switch (args[0]) {
             case "Fly":
-                return { image: emojiToBase64("🛫"), state: GetItemPreventingFly() ? "Blocked" : "Default", hoverText: "Fly" };
+                return { image: emojiToBase64("🛫"), state: GetWingBindingItem () || GetItemPreventingFly() ? "Blocked" : "Default", hoverText: "Fly" };
                 break;
             case "Land":
                 return { image: emojiToBase64("🛬"), state: "Default", hoverText: "Land" };
