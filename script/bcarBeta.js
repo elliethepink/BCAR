@@ -2146,29 +2146,31 @@ if (window.BCAR_VERSION) {
 
     function WingFlap() {
         if (Player.BCAR.bcarSettings.wingFlappingEnable === true) {
-            let wingsVariations = [
+            /*let wingsVariations = [
                 Player.BCAR.bcarSettings.wingsDefault.wings2,
                 Player.BCAR.bcarSettings.wingsDefault.wings1,
-            ];
-            let wingsColor = [
+            ];*/
+            /*let wingsColor = [
                 Player.BCAR.bcarSettings.wingsDefault.wingsColor2,
                 Player.BCAR.bcarSettings.wingsDefault.wingsColor1,
-            ];
-            let numberFlaps = parseInt(
-                Player.BCAR.bcarSettings.wingsDefault.wingsCount,
-            );
-            let delay = parseInt(
-                Player.BCAR.bcarSettings.wingsDefault.wingsDelay,
-            );
+            ];*/
+            const wings = InventoryGet(Player, "Wings");
+
+            let numberFlaps = Player.ExtensionSettings.bcarpix.wingFlapCount;
+            let delay = Player.ExtensionSettings.bcarpix.wingFlapDuration;
+            const scaleY = Player.ExtensionSettings.bcarpix.wingFlapScaleY ?? 0.4;
+            const scaleX = Player.ExtensionSettings.bcarpix.wingFlapScaleX;
             for (let i = 0; i < numberFlaps; i++) {
                 setTimeout(function () {
-                    InventoryWear(
-                        Player,
-                        wingsVariations[i % wingsVariations.length],
-                        "Wings",
-                        wingsColor[i % wingsColor.length],
-                    );
+                    if (i % 2) {
+                        wings.Property.ScaleX = 1;
+                        wings.Property.ScaleY = 1;
+                    } else {
+                        if (scaleX !== undefined) wings.Property.ScaleX = scaleX;
+                        if (scaleY !== undefined) wings.Property.ScaleY = scaleY;
+                    }
                     ChatRoomCharacterItemUpdate(Player, "Wings");
+                    CharacterRefresh(Player, false);
                 }, i * delay);
             }
         }
@@ -2208,7 +2210,7 @@ if (window.BCAR_VERSION) {
                         if (scaleY !== undefined) antennae.Property.ScaleY = scaleY;
                     }
                     ChatRoomCharacterItemUpdate(Player, "HairAccessory1");
-                    CharacterRefresh(Player);
+                    CharacterRefresh(Player, false);
                 }, i * wiggleDuration);
             }
         }
@@ -2653,9 +2655,10 @@ if (window.BCAR_VERSION) {
             if (emoticon.Property === undefined) emoticon.Property = {};
             emoticon.Property.OverrideHeight = defaultFlyOverrideHeight();
             */
-            CurrentScreen === "ChatRoom"
-                ? ChatRoomCharacterUpdate(Player)
-                : CharacterRefresh(Player);
+            //CurrentScreen === "ChatRoom"
+            //    ? ChatRoomCharacterUpdate(Player)
+            //    : CharacterRefresh(Player);
+            CharacterRefresh(Player, false);
 
         }
     }
@@ -2674,15 +2677,14 @@ if (window.BCAR_VERSION) {
                     : CharacterRefresh(Player);
             }*/
 
-            ChatRoomCharacterUpdate(Player);
+            //ChatRoomCharacterUpdate(Player);
+            CharacterRefresh(Player, false);
         }
     }
 
     function WingsHide() {
         InventoryRemove(Player, "Wings");
-        CurrentScreen === "ChatRoom"
-            ? ChatRoomCharacterUpdate(Player)
-            : CharacterRefresh(Player);
+        ChatRoomCharacterItemUpdate(Player, "Wings");
     }
 
     function StopLeaving() {
@@ -3949,22 +3951,16 @@ if (window.BCAR_VERSION) {
 			orHeight.Height += (dir === "up") ? 10 : -10;
 		}
 
-		CurrentScreen === "ChatRoom"
-			? ChatRoomCharacterUpdate(Player)
-			: CharacterRefresh(Player);
+		CharacterRefresh(Player, false);
     }
 
 	function CommandTiny(args) {
         if (InventoryGet(Player, "额外身高_Luzi")?.Asset?.Name === "缩小地上") {
 			InventoryRemove(Player, "额外身高_Luzi");
-            CurrentScreen === "ChatRoom"
-                ? ChatRoomCharacterUpdate(Player)
-                : CharacterRefresh(Player);
+            CharacterRefresh(Player, false);
 		} else {
 			InventoryWear(Player, "缩小地上_Luzi", "额外身高_Luzi");
-            CurrentScreen === "ChatRoom"
-                ? ChatRoomCharacterUpdate(Player)
-                : CharacterRefresh(Player);
+			CharacterRefresh(Player, false);
 		}
 	}
     //End of Wing Commands
