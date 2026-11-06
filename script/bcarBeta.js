@@ -2175,7 +2175,6 @@ if (window.BCAR_VERSION) {
     }
 
     function WingsSpread() {
-        const wingBindItem = GetWingBindingItem();
         if (Player.BCAR.bcarSettings.wingFlappingEnable === true && !GetWingBindingItem()) {
             InventoryWear(
                 Player,
@@ -2187,6 +2186,34 @@ if (window.BCAR_VERSION) {
         }
     }
 
+    function AntennaeWiggle() {
+        const antennae = InventoryGet(Player, "HairAccessory1");
+        if (antennae && antennae.Asset?.Name === "Antennae") {
+            if (!antennae.Property) {
+                antennae.Property = {};
+            }
+
+            const numWiggles = Player.ExtensionSettings.bcarpix.antennaeWiggleCount ?? 6;
+            const wiggleDuration = Player.ExtensionSettings.bcarpix.antennaeWiggleDuration ?? 200;
+            const scaleY = Player.ExtensionSettings.bcarpix.antennaeWiggleScaleY ?? 0.4;
+            const scaleX = Player.ExtensionSettings.bcarpix.antennaeWiggleScaleX;
+
+            for (let i = 0; i < numWiggles; i++) {
+                setTimeout(() => {
+                    if (i % 2) {
+                        antennae.Property.ScaleX = 1;
+                        antennae.Property.ScaleY = 1;
+                    } else {
+                        if (scaleX !== undefined) antennae.Property.ScaleX = scaleX;
+                        if (scaleY !== undefined) antennae.Property.ScaleY = scaleY;
+                    }
+                    ChatRoomCharacterItemUpdate(Player, "HairAccessory1");
+                    CharacterRefresh(Player);
+                }, i * wiggleDuration);
+            }
+        }
+    }
+
     modApi.hookFunction("CharacterGetEffects", 4, (args, next) => {
         const effects = next(args);
         if (IsFlying(args[0])) {
@@ -2195,14 +2222,28 @@ if (window.BCAR_VERSION) {
         return effects;
     });
 
-    const origGetSlowLevel = Player.GetSlowLevel;
+    /*const origGetSlowLevel = Player.GetSlowLevel;
     Player.GetSlowLevel = function() {
         if (IsFlying(Player)) {
             return 0;
         } else {
             return origGetSlowLevel.apply(this);
         }
-    };
+    };*/
+
+    modApi.hookFunction("Player.IsSuspended", 0, (args, next) => {
+        if (IsFlying(Player)) {
+            return false;
+        }
+        return next(args);
+    });
+
+    modApi.hookFunction("Player.GetSlowLevel", 0, (args, next) => {
+        if (IsFlying(Player)) {
+            return 0;
+        }
+        return next(args);
+    });
 
     /*const origCraftItemPropertyValidate = CraftingValidationRecord.ItemProperty.Validate;
     CraftingValidationRecord.ItemProperty.Validate = (c, a) => {
@@ -2480,6 +2521,7 @@ if (window.BCAR_VERSION) {
             "CeilingRope",
             "CeilingChain",
             "BallChain",
+            "BirdCage",
         ];
         return Player.Appearance.find(
             (i) =>
@@ -2501,7 +2543,8 @@ if (window.BCAR_VERSION) {
 
     function IsFlying(character) {
         if (!character) return false;
-        return typeof InventoryGet(character, "Emoticon")?.Property?.OverrideHeight?.Height == "number";
+        const addonItem = InventoryGet(character, "ItemAddon");
+        return addonItem?.Asset.Name == "调整高度" && typeof addonItem?.Property?.OverrideHeight?.Height == "number";
     }
 
     function TryFly() {
@@ -2597,9 +2640,19 @@ if (window.BCAR_VERSION) {
     function Fly() {
         if (Player.BCAR.bcarSettings.wingFlappingEnable === true) {
             CharacterSetActivePose(Player, "LegsClosed");
-            const emoticon = InventoryGet(Player, "Emoticon");
+
+            const heightTool = InventoryWear(
+                Player,
+                "调整高度",
+                "ItemAddon",
+            );
+            heightTool.Property.TypeRecord = {typed: 1};
+            heightTool.Property.OverrideHeight = defaultFlyOverrideHeight();
+
+            /*const emoticon = InventoryGet(Player, "Emoticon");
             if (emoticon.Property === undefined) emoticon.Property = {};
             emoticon.Property.OverrideHeight = defaultFlyOverrideHeight();
+            */
             CurrentScreen === "ChatRoom"
                 ? ChatRoomCharacterUpdate(Player)
                 : CharacterRefresh(Player);
@@ -2609,14 +2662,18 @@ if (window.BCAR_VERSION) {
 
     function Landing() {
         if (Player?.BCAR?.bcarSettings?.wingFlappingEnable) {
-            CharacterSetActivePose(Player, "LegsOpen");
-            const emoticon = InventoryGet(Player, "Emoticon");
+            CharacterSetActivePose(Player, "BaseLower");
+
+            InventoryRemove(Player, "ItemAddon");
+
+            /*const emoticon = InventoryGet(Player, "Emoticon");
             if (emoticon?.Property) {
                 delete emoticon.Property.OverrideHeight;
                 CurrentScreen === "ChatRoom"
                     ? ChatRoomCharacterUpdate(Player)
                     : CharacterRefresh(Player);
-            }
+            }*/
+
             ChatRoomCharacterUpdate(Player);
         }
     }
@@ -2806,6 +2863,24 @@ if (window.BCAR_VERSION) {
                 );
                 if (result) {
                     EarWiggle();
+                }
+            }
+
+            if (
+                data.Type === "Emote" &&
+                data.Sender === Player.MemberNumber
+            ) {
+                var wiggleMessage = data.Content;
+                let patterns = [
+                    /wiggles.*antennae/im,
+                    /antennae.*wiggling/im,
+                    /wiggling.*antennae/im,
+                ]; // matches {<any> wags <any> tail <any>}
+                let result = patterns.find((pattern) =>
+                    pattern.test(wiggleMessage),
+                );
+                if (result) {
+                    AntennaeWiggle();
                 }
             }
 
@@ -3866,7 +3941,7 @@ if (window.BCAR_VERSION) {
 		if (!["up", "down"].includes(dir)) return;
         if (!IsFlying(Player)) return;
 
-		const orHeight = InventoryGet(Player, "Emoticon").Property.OverrideHeight;
+		const orHeight = InventoryGet(Player, "调整高度").Property.OverrideHeight;
 
         if (InventoryGet(Player, "额外身高_Luzi")?.Asset?.Name === "缩小地上") {
 			orHeight.HeightRatioProportion += (dir === "up") ? -0.1 : 0.1;
@@ -7038,6 +7113,7 @@ if (window.BCAR_VERSION) {
     const AnimationsMap = {
         // this one is new
         BCAR_TailWag: TailWag,
+        BCAR_AntennaeWiggle: AntennaeWiggle,
     };
 
     // -- Intercept ServerSend for "BCAR_"... activities and manually hack in the substitutions
@@ -7054,9 +7130,9 @@ if (window.BCAR_VERSION) {
                 let msg = ActivityDictionaryText(data.Content);
                 msg = CommonStringSubstitute(msg, substitutions ?? []);
                 data.Dictionary.push({
-                    Tag:
-                        "MISSING ACTIVITY DESCRIPTION FOR KEYWORD " +
-                        data.Content,
+                    Tag: `${TEXT_NOT_FOUND_PREFIX} "ActivityDictionary.csv": ${data.Content}`,
+                        //"MISSING ACTIVITY DESCRIPTION FOR KEYWORD " +
+                        //data.Content,
                     Text: msg,
                 });
                 AnimationsMap[actName]?.(); // and this line is new, nothing else changed
@@ -7120,6 +7196,7 @@ if (window.BCAR_VERSION) {
     );
     CustomImages.set(wagActivity.Name, ICONS.TAIL);
 
+    const textCache = ActivityDictionaryLoad();
     ActivityDictionary?.push(["ActivityBCAR_TailWag", "Wag Tail"]);
     ActivityDictionary?.push([
         "Label-ChatOther-ItemButt-BCAR_TailWag",
@@ -7153,23 +7230,15 @@ if (window.BCAR_VERSION) {
 
     CustomImages.set(tailBrushActivity.Name, ICONS.TAIL);
 
-    ActivityDictionary?.push(["ActivityBCAR_TailBrush", "Brush Tail"]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemButt-BCAR_TailBrush",
-        "Brush Tail",
-    ]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemButt-BCAR_TailBrush",
-        "Brush Tail",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemButt-BCAR_TailBrush",
-        "SourceCharacter brushes PronounPossessive tail.",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemButt-BCAR_TailBrush",
-        "SourceCharacter brushes TargetCharacter's tail.",
-    ]);
+    textCache.cache["ActivityBCAR_TailBrush"] = "Brush Tail";
+    textCache.cache["Label-ChatOther-ItemButt-BCAR_TailBrush"] = "Brush Tail";
+    textCache.cache["Label-ChatOther-ItemButt-BCAR_TailBrush"] = "Brush Tail";
+    textCache.cache["Label-ChatSelf-ItemButt-BCAR_TailBrush"] = "Brush Tail";
+    textCache.cache["Label-ChatSelf-ItemButt-BCAR_TailBrush"] = "Brush Tail";
+    textCache.cache["ChatSelf-ItemButt-BCAR_TailBrush"] = "SourceCharacter brushes PronounPossessive tail.";
+    textCache.cache["ChatSelf-ItemButt-BCAR_TailBrush"] = "SourceCharacter brushes PronounPossessive tail.";
+    textCache.cache["ChatOther-ItemButt-BCAR_TailBrush"] = "SourceCharacter brushes TargetCharacter's tail.";
+    textCache.cache["ChatOther-ItemButt-BCAR_TailBrush"] = "SourceCharacter brushes TargetCharacter's tail.";
 
     ActivityFemale3DCG.push(tailBrushActivity);
     ActivityFemale3DCGOrdering.push(tailBrushActivity.Name);
@@ -7189,17 +7258,11 @@ if (window.BCAR_VERSION) {
         (acting, acted, group) => InventoryGet(acted, "HairAccessory1")?.Asset?.Name === "Antennae",
     );
 
-    CustomImages.set(antennaeWiggleActivity.Name, "Assets/Female3DCG/Activity/Wiggle.png");
+    CustomImages.set(antennaeWiggleActivity.Name, "Icons/Activity/Wiggle.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_AntennaeWiggle", "Wiggle Antennae"]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHead-BCAR_AntennaeWiggle",
-        "Wiggle Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHead-BCAR_AntennaeWiggle",
-        "SourceCharacter wiggles PronounPossessive antennae.",
-    ]);
+    textCache.cache["ActivityBCAR_AntennaeWiggle"] = "Wiggle Antennae";
+    textCache.cache["Label-ChatSelf-ItemHead-BCAR_AntennaeWiggle"] = "Wiggle Antennae";
+    textCache.cache["ChatSelf-ItemHead-BCAR_AntennaeWiggle"] = "SourceCharacter wiggles PronounPossessive antennae.";
 
     ActivityFemale3DCG.push(antennaeWiggleActivity);
     ActivityFemale3DCGOrdering.push(antennaeWiggleActivity.Name);
@@ -7214,25 +7277,13 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasAntennae"],
     };
 
-    CustomImages.set(antennaeCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
+    CustomImages.set(antennaeCaressActivity.Name, "Icons/Activity/Caress.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_AntennaeWiggle", "Caress Antennae"]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHead-BCAR_AntennaeCaress",
-        "Caress Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHead-BCAR_AntennaeCaress",
-        "Caress Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHead-BCAR_AntennaeCaress",
-        "SourceCharacter caresses PronounPossessive antennae.",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHead-BCAR_AntennaeCaress",
-        "SourceCharacter caresses TargetCharacter's antennae.",
-    ]);
+    textCache.cache["ActivityBCAR_AntennaeCaress"] = "Caress Antennae";
+    textCache.cache["Label-ChatSelf-ItemHead-BCAR_AntennaeCaress"] = "Caress Antennae";
+    textCache.cache["Label-ChatOther-ItemHead-BCAR_AntennaeCaress"] = "Caress Antennae";
+    textCache.cache["ChatSelf-ItemHead-BCAR_AntennaeCaress"] = "SourceCharacter caresses PronounPossessive antennae.";
+    textCache.cache["ChatOther-ItemHead-BCAR_AntennaeCaress"] = "SourceCharacter caresses TargetCharacter's antennae.";
 
     ActivityFemale3DCG.push(antennaeCaressActivity);
     ActivityFemale3DCGOrdering.push(antennaeCaressActivity.Name);
@@ -7247,17 +7298,11 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasAntennae"],
     };
 
-    CustomImages.set(antennaeLickActivity.Name, "Assets/Female3DCG/Activity/Lick.png");
+    CustomImages.set(antennaeLickActivity.Name, "Icons/Activity/Lick.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_AntennaeLick", "Lick Antennae"]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHead-BCAR_AntennaeLick",
-        "Lick Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHead-BCAR_AntennaeLick",
-        "SourceCharacter licks TargetCharacter's antennae.",
-    ]);
+    textCache.cache["ActivityBCAR_AntennaeLick"] = "Lick Antennae";
+    textCache.cache["Label-ChatOther-ItemHead-BCAR_AntennaeLick"] = "Lick Antennae";
+    textCache.cache["ChatOther-ItemHead-BCAR_AntennaeLick"] = "SourceCharacter licks TargetCharacter's antennae.";
 
     ActivityFemale3DCG.push(antennaeLickActivity);
     ActivityFemale3DCGOrdering.push(antennaeLickActivity.Name);
@@ -7272,17 +7317,11 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasAntennae"],
     };
 
-    CustomImages.set(antennaeSuckActivity.Name, "Assets/Female3DCG/Activity/Suck.png");
+    CustomImages.set(antennaeSuckActivity.Name, "Icons/Activity/Suck.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_AntennaeSuck", "Suck Antennae"]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHead-BCAR_AntennaeSuck",
-        "Suck Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHead-BCAR_AntennaeSuck",
-        "SourceCharacter sucks TargetCharacter's antennae.",
-    ]);
+    textCache.cache["ActivityBCAR_AntennaeSuck"] = "Suck Antennae";
+    textCache.cache["Label-ChatOther-ItemHead-BCAR_AntennaeSuck"] = "Suck Antennae";
+    textCache.cache["ChatOther-ItemHead-BCAR_AntennaeSuck"] = "SourceCharacter sucks TargetCharacter's antennae.";
 
     ActivityFemale3DCG.push(antennaeSuckActivity);
     ActivityFemale3DCGOrdering.push(antennaeSuckActivity.Name);
@@ -7297,25 +7336,13 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasAntennae"],
     };
 
-    CustomImages.set(antennaeBoingActivity.Name, "Assets/Female3DCG/Activity/Wiggle.png");
+    CustomImages.set(antennaeBoingActivity.Name, "Icons/Activity/Wiggle.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_AntennaeBoing", "Boing Antennae"]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHead-BCAR_AntennaeBoing",
-        "Boing Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHead-BCAR_AntennaeBoing",
-        "Boing Antennae",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHead-BCAR_AntennaeBoing",
-        "SourceCharacter pulls PronounPossessive antennae down and lets them spring back with a boing.",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHead-BCAR_AntennaeBoing",
-        "SourceCharacter pulls TargetCharacter's antennae down and lets them spring back with a boing.",
-    ]);
+    textCache.cache["ActivityBCAR_AntennaeBoing"] = "Boing Antennae";
+    textCache.cache["Label-ChatSelf-ItemHead-BCAR_AntennaeBoing"] = "Boing Antennae";
+    textCache.cache["Label-ChatOther-ItemHead-BCAR_AntennaeBoing"] = "Boing Antennae";
+    textCache.cache["ChatSelf-ItemHead-BCAR_AntennaeBoing"] = "SourceCharacter pulls PronounPossessive antennae down and lets them spring back with a boing.";
+    textCache.cache["ChatOther-ItemHead-BCAR_AntennaeBoing"] = "SourceCharacter pulls TargetCharacter's antennae down and lets them spring back with a boing.";
 
     ActivityFemale3DCG.push(antennaeBoingActivity);
     ActivityFemale3DCGOrdering.push(antennaeBoingActivity.Name);
@@ -7337,23 +7364,11 @@ if (window.BCAR_VERSION) {
 
     CustomImages.set(wingTickleActivity.Name, "Assets/Female3DCG/Activity/Tickle.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_WingTickle", "Tickle Wings"]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHood-BCAR_WingTickle",
-        "Tickle Wings",
-    ]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHood-BCAR_WingTickle",
-        "Tickle Wings",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHood-BCAR_WingTickle",
-        "SourceCharacter tickles PronounPossessive wings.",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHood-BCAR_WingTickle",
-        "SourceCharacter tickles TargetCharacter's wings.",
-    ]);
+    textCache.cache["ActivityBCAR_WingTickle"] = "Tickle Wings";
+    textCache.cache["Label-ChatSelf-ItemHood-BCAR_WingTickle"] = "Tickle Wings";
+    textCache.cache["Label-ChatOther-ItemHood-BCAR_WingTickle"] = "Tickle Wings";
+    textCache.cache["ChatSelf-ItemHood-BCAR_WingTickle"] = "SourceCharacter tickles PronounPossessive wings.";
+    textCache.cache["ChatOther-ItemHood-BCAR_WingTickle"] = "SourceCharacter tickles TargetCharacter's wings.";
 
     ActivityFemale3DCG.push(wingTickleActivity);
     ActivityFemale3DCGOrdering.push(wingTickleActivity.Name);
@@ -7370,23 +7385,11 @@ if (window.BCAR_VERSION) {
 
     CustomImages.set(wingCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
 
-    ActivityDictionary?.push(["ActivityBCAR_WingCaress", "Caress Wings"]);
-    ActivityDictionary?.push([
-        "Label-ChatSelf-ItemHood-BCAR_WingCaress",
-        "Caress Wings",
-    ]);
-    ActivityDictionary?.push([
-        "Label-ChatOther-ItemHood-BCAR_WingCaress",
-        "Caress Wings",
-    ]);
-    ActivityDictionary?.push([
-        "ChatSelf-ItemHood-BCAR_WingCaress",
-        "SourceCharacter carresses PronounPossessive wings.",
-    ]);
-    ActivityDictionary?.push([
-        "ChatOther-ItemHood-BCAR_WingCaress",
-        "SourceCharacter carresses TargetCharacter's wings.",
-    ]);
+    textCache.cache["ActivityBCAR_WingCaress"] = "Caress Wings";
+    textCache.cache["Label-ChatSelf-ItemHood-BCAR_WingCaress"] = "Caress Wings";
+    textCache.cache["Label-ChatOther-ItemHood-BCAR_WingCaress"] = "Caress Wings";
+    textCache.cache["ChatSelf-ItemHood-BCAR_WingCaress"] = "SourceCharacter caresses PronounPossessive wings.";
+    textCache.cache["ChatOther-ItemHood-BCAR_WingCaress"] = "SourceCharacter caresses TargetCharacter's wings.";
 
     ActivityFemale3DCG.push(wingCaressActivity);
     ActivityFemale3DCGOrdering.push(wingCaressActivity.Name);
