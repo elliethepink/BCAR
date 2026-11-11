@@ -2678,7 +2678,10 @@ if (window.BCAR_VERSION) {
             }*/
 
             //ChatRoomCharacterUpdate(Player);
-            CharacterRefresh(Player, false);
+            //CharacterRefresh(Player, false);
+            // this seems to be necessary to remove the height tool for everyone else
+            // (but not when adding it... go figure)
+            ChatRoomCharacterItemUpdate(Player, "ItemAddon");
         }
     }
 
@@ -7358,7 +7361,7 @@ if (window.BCAR_VERSION) {
         (acting, acted, group) => !!InventoryGet(acted, "Wings"),
     );
 
-    CustomImages.set(wingTickleActivity.Name, "Assets/Female3DCG/Activity/Tickle.png");
+    CustomImages.set(wingTickleActivity.Name, "Icons/Activity/Tickle.png");
 
     textCache.cache["ActivityBCAR_WingTickle"] = "Tickle Wings";
     textCache.cache["Label-ChatSelf-ItemHood-BCAR_WingTickle"] = "Tickle Wings";
@@ -7379,7 +7382,7 @@ if (window.BCAR_VERSION) {
         Prerequisite: ["HasWings"],
     };
 
-    CustomImages.set(wingCaressActivity.Name, "Assets/Female3DCG/Activity/Caress.png");
+    CustomImages.set(wingCaressActivity.Name, "Icons/Activity/Caress.png");
 
     textCache.cache["ActivityBCAR_WingCaress"] = "Caress Wings";
     textCache.cache["Label-ChatSelf-ItemHood-BCAR_WingCaress"] = "Caress Wings";
